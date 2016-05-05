@@ -42,10 +42,10 @@ svg
 
 var margin = {top: 350, right: 480, bottom: 350, left: 480},
     radius = Math.min(margin.top, margin.right, margin.bottom, margin.left) - 10
-    rings = {hold: {radius : radius, text: 'HOLD'},
-      assess: {radius: radius/1.25, text: 'ASSESS'},
-      trial: {radius: radius/1.75, text: 'TRIAL'},
-      adopt: {radius: radius/3.25, text: 'ADOPT'}};
+    annuli = {hold: {outer : radius, inner: radius/1.25, text: 'HOLD'},
+      assess: {outer: radius/1.25, inner: radius/1.75, text: 'ASSESS'},
+      trial: {outer: radius/1.75, inner: radius/3.25, text: 'TRIAL'},
+      adopt: {outer: radius/3.25, inner: 0, text: 'ADOPT'}};
 
 var svg = d3.select("body").append("svg")
     .attr("width", margin.left + margin.right)
@@ -56,12 +56,13 @@ var svg = d3.select("body").append("svg")
 //use rings json object to generate circles, and as such attach full data to each svg circle. When creating the circle also append the related text (if possible)
 
     svg.selectAll('circle')
-    .data(Object.keys(rings))
+    .data(Object.keys(annuli))
     .enter()
     .append('circle')
-    .attr('r', function(d){return rings[d].radius;})
-    .attr('class', function(d){return rings[d].text.toLowerCase() + '-cir'})
-    .on('click', function(d){alert(rings[d].text);});
+    .datum(function(d){return annuli[d];})
+    .attr('r', function(d){return d.outer;})
+    .attr('class', function(d){return d.text.toLowerCase() + '-cir'})
+    .on('click', function(d){alert(d.text);});
 
 var vert = svg.append("line")
       .attr('x1', -radius)
@@ -75,35 +76,26 @@ var horiz = svg.append("line")
       .attr('x2', 0)
       .attr('y2', radius);
 
-      for (i=0;i<10;i++)
-      {
-        cart(rings.trial.radius, rings.adopt.radius);
-      }
-
-      //svg.selectAll('circle').each(function(d){alert(this['r']);});
-      svg.selectAll('circle').each(function(d){alert(d);});
-
-
-      svg.selectAll('text')
-      .data(Object.keys(rings))
-      .enter()
-      .append('text')
+var annuliLabels = svg.selectAll('text')
+      .data(Object.keys(annuli))
+      .enter();
+      annuliLabels.append('text')
       .attr('y', 5)
-      .attr('x', 400)
-      .attr('text', function(d){alert(rings[d].text);});
-
-      svg.append('text')
-      .attr('x', -rings.hold.radius+((rings.hold.radius-rings.assess.radius)/2))
+      .attr('x', function(d){return -getCentreAnnuli(d); })
+      .text(function(d){return annuli[d].text;});
+      annuliLabels.append('text')
       .attr('y', 5)
-      .text(rings.hold.text);
+      .attr('x', function(d){return getCentreAnnuli(d);})
+      .text(function(d){return annuli[d].text;});
 
-      svg.append('text')
-      .attr('x', -(radius/1.25)+(radius/1.25-radius/1.75)/2)
-      .attr('y', 5)
-      .text('ASSESS');
-
-getRingIndex('assess');
-
+function getCentreAnnuli(key)
+{
+  return ((annuli[key].outer-annuli[key].inner)/2)+annuli[key].inner;
+}
+for(i=0;i<10;i++)
+{
+  cart(annuli.trial.outer, annuli.trial.inner)
+}
 function cart(r1, r2)
 {
       r1 = r1 - 20;
@@ -122,10 +114,5 @@ function cart(r1, r2)
      svg.append("path")
       .attr("transform", function(d) { return "translate(" + xy[0] + "," + xy[1] + ")"; })
       .attr("d", d3.svg.symbol().type('triangle-up').size(50));
-}
-
-function getRingIndex(i)
-{
-  alert(rings[i].text);
 }
 </script>

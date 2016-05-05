@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+text
+{
+font: bold 12px Verdana, Helvetica, Arial, sans-serif;
+text-anchor:middle;
+}
+line{
+  stroke:rgb(242,242,242);
+  stroke-width: 14;
+}
+
+path{
+  fill:rgb(82,181,190);
+}
+
+circle,
+path {
+  cursor: pointer;
+}
+
+circle {
+  pointer-events: all;
+}
+
+.adopt-cir{fill:rgb(191, 192, 191);}
+.trial-cir{fill:rgb(203,204,203);}
+.assess-cir{fill:rgb(215,216,214);}
+.hold-cir{fill:rgb(228,229,228);}
+
+svg
+{
+    border: 1Em;
+    color: black;
+}
+</style>
+<body>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript">
+//check out d3.svg.symbol() for plotting items.
+
+var margin = {top: 350, right: 480, bottom: 350, left: 480},
+    radius = Math.min(margin.top, margin.right, margin.bottom, margin.left) - 10
+    rings = {hold: {radius : radius, text: 'HOLD'},
+      assess: {radius: radius/1.25, text: 'ASSESS'},
+      trial: {radius: radius/1.75, text: 'TRIAL'},
+      adopt: {radius: radius/3.25, text: 'ADOPT'}};
+
+var svg = d3.select("body").append("svg")
+    .attr("width", margin.left + margin.right)
+    .attr("height", margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+//use rings json object to generate circles, and as such attach full data to each svg circle. When creating the circle also append the related text (if possible)
+var holdCir = svg.append("circle")
+      .attr("r", rings.hold.radius )
+      .attr("class", "hold-cir")
+      .on("click", function(){alert('Hold');});
+
+var assessCir = svg.append("circle")
+      .attr("r", rings.assess.radius)
+      .attr("class", "assess-cir")
+      .on("click", function(){alert('Assess');});
+
+var trialCir = svg.append("circle")
+      .attr("r", rings.trial.radius)
+      .attr("class", "trial-cir")
+      .on("click", function(){alert('Trial');});
+
+var adoptCir = svg.append("circle")
+      .attr("r", rings.adopt.radius)
+      .attr("class", "adopt-cir")
+      .on("click", function(){alert('Adopt');});
+
+var vert = svg.append("line")
+      .attr('x1', -radius)
+      .attr('y1', 0)
+      .attr('x2', radius)
+      .attr('y2', 0);
+
+var horiz = svg.append("line")
+      .attr('x1',  0)
+      .attr('y1', -radius)
+      .attr('x2', 0)
+      .attr('y2', radius);
+
+      for (i=0;i<10;i++)
+      {
+        cart(trialCir.attr('r'), adoptCir.attr('r'));
+      }
+
+      //svg.selectAll('circle').each(function(d){alert(this['r']);});
+      svg.selectAll('circle').each(function(d){alert(this.getAttribute('r'));});
+
+
+      svg.selectAll('text')
+      .data(Object.keys(rings))
+      .enter()
+      .append('text')
+      .attr('y', 5)
+      .attr('x', 400)
+      .attr('text', function(d){alert(rings[d].text);});
+
+      svg.append('text')
+      .attr('x', -rings.hold.radius+((rings.hold.radius-rings.assess.radius)/2))
+      .attr('y', 5)
+      .text(rings.hold.text);
+
+      svg.append('text')
+      .attr('x', -(radius/1.25)+(radius/1.25-radius/1.75)/2)
+      .attr('y', 5)
+      .text('ASSESS');
+
+getRingIndex('assess');
+
+function cart(r1, r2)
+{
+      r1 = r1 - 20;
+      r2 = r2 + 20;
+     //create randon point within an Annulus
+     //var t = 2 * Math.PI * Math.random();
+     //restrict point to a radian boundary in an annulus
+     var max = Math.PI, min = Math.PI/2;
+     var t = Math.random() * (max - min) + min;
+
+     var A = 2/(r1*r1 - r2*r2);
+     //should be random.uniform(0,1)
+     var r = Math.sqrt(2 * Math.random()/A + r2*r2);
+     var xy = [r*Math.cos(t), r*Math.sin(t)];
+
+     svg.append("path")
+      .attr("transform", function(d) { return "translate(" + xy[0] + "," + xy[1] + ")"; })
+      .attr("d", d3.svg.symbol().type('triangle-up').size(50));
+}
+
+function getRingIndex(i)
+{
+  alert(rings[i].text);
+}
+</script>

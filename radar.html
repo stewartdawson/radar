@@ -54,25 +54,14 @@ var svg = d3.select("body").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 //use rings json object to generate circles, and as such attach full data to each svg circle. When creating the circle also append the related text (if possible)
-var holdCir = svg.append("circle")
-      .attr("r", rings.hold.radius )
-      .attr("class", "hold-cir")
-      .on("click", function(){alert('Hold');});
 
-var assessCir = svg.append("circle")
-      .attr("r", rings.assess.radius)
-      .attr("class", "assess-cir")
-      .on("click", function(){alert('Assess');});
-
-var trialCir = svg.append("circle")
-      .attr("r", rings.trial.radius)
-      .attr("class", "trial-cir")
-      .on("click", function(){alert('Trial');});
-
-var adoptCir = svg.append("circle")
-      .attr("r", rings.adopt.radius)
-      .attr("class", "adopt-cir")
-      .on("click", function(){alert('Adopt');});
+    svg.selectAll('circle')
+    .data(Object.keys(rings))
+    .enter()
+    .append('circle')
+    .attr('r', function(d){return rings[d].radius;})
+    .attr('class', function(d){return rings[d].text.toLowerCase() + '-cir'})
+    .on('click', function(d){alert(rings[d].text);});
 
 var vert = svg.append("line")
       .attr('x1', -radius)
@@ -88,11 +77,11 @@ var horiz = svg.append("line")
 
       for (i=0;i<10;i++)
       {
-        cart(trialCir.attr('r'), adoptCir.attr('r'));
+        cart(rings.trial.radius, rings.adopt.radius);
       }
 
       //svg.selectAll('circle').each(function(d){alert(this['r']);});
-      svg.selectAll('circle').each(function(d){alert(this.getAttribute('r'));});
+      svg.selectAll('circle').each(function(d){alert(d);});
 
 
       svg.selectAll('text')

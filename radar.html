@@ -36,6 +36,7 @@ svg
 }
 </style>
 <body>
+<div>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script type="text/javascript">
 //check out d3.svg.symbol() for plotting items.
@@ -118,6 +119,23 @@ var svg = d3.select("body").append("svg")
     .attr('class', function(d){return d.text.toLowerCase() + '-cir'})
     .on('click', function(d){alert(d.text);});
 
+   d3.select('div').selectAll('p')
+    .data(Object.keys(radar))
+    .enter()
+    .append('p')
+    .text(function(d){return d;})
+    .selectAll('p')
+    .data(function(d){return Object.keys(radar[d]).splice(1);})
+    .enter()
+    .append('p')
+    .text(function(d){return d;})
+    .datum(function(d){return radar[this.parentNode.__data__][d];})
+    .selectAll('p')
+    .data(function(){return this.parentNode.__data__})
+    .enter()
+    .append('p')
+    .text(function(d){return d.name + ' - ' + d.description;});
+
 var vert = svg.append("line")
       .attr('x1', -radius)
       .attr('y1', 0)
@@ -174,3 +192,4 @@ function ping(r1, r2, maxRad, minRad)
       .attr("d", d3.svg.symbol().type('triangle-up').size(50));
 }
 </script>
+</body>

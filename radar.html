@@ -12,7 +12,7 @@ line{
 }
 
 path{
-  fill:rgb(82,181,190);
+  fill:rgb(240,171,0);
 }
 
 circle,
@@ -28,20 +28,36 @@ circle {
 .trial-cir{fill:rgb(203,204,203);}
 .assess-cir{fill:rgb(215,216,214);}
 .hold-cir{fill:rgb(228,229,228);}
-
+body{
+    width:90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: none;
+    margin-bottom: none;
+}
+.content{
+  float:left; width:400px;
+  border: 0px solid blue;
+}
+.section{font-weight: bold;}
+.position{font-weight: bold;}
+.title{font-weight: normal;}
+.highlight{font-weight: bold;}
+.nohighlight{font-weight: normal;}
 svg
 {
-    border: 1Em;
-    color: black;
+    float:left;
+    border: 0px solid red;
 }
 </style>
 <body>
-<div>
+<title>Radar</title>
 <script src="//d3js.org/d3.v3.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script type="text/javascript">
 //check out d3.svg.symbol() for plotting items.
 
-var margin = {top: 350, right: 480, bottom: 350, left: 480},
+var margin = {top: 350, right: 350, bottom: 350, left: 350},
     radius = Math.min(margin.top, margin.right, margin.bottom, margin.left) - 10
     annuli = {hold: {outer : radius, inner: radius/1.25, text: 'HOLD'},
       assess: {outer: radius/1.25, inner: radius/1.75, text: 'ASSESS'},
@@ -50,8 +66,13 @@ var margin = {top: 350, right: 480, bottom: 350, left: 480},
 
 var radar = {
   techniques:
-    {radian:{max:(3*Math.PI)/2, min: Math.PI},
+    {title: 'Techniques',
+      radian:{max:(3*Math.PI)/2, min: Math.PI},
       adopt: [
+      {name: 'Agile Threat Modelling', description: 'Same and Threat Modelling but Agile. With the number of high-profile security breaches in the past months, software development teams no longer need convincing that they must place an emphasis on writing secure software and dealing with their users data in a responsible way.'},
+      {name: 'Agile Threat Modelling v4', description: 'Same and Agile Threat Modelling v3 but newer. With the number of high-profile security breaches in the past months, software development teams no longer need convincing that they must place an emphasis on writing secure software and dealing with their users data in a responsible way.'},
+      {name: 'Agile Threat Modelling v3', description: 'Same and Agile Threat Modelling v2 but newer. With the number of high-profile security breaches in the past months, software development teams no longer need convincing that they must place an emphasis on writing secure software and dealing with their users data in a responsible way.'},
+      {name: 'Agile Threat Modelling v2', description: 'Same and Agile Threat Modelling but newer. With the number of high-profile security breaches in the past months, software development teams no longer need convincing that they must place an emphasis on writing secure software and dealing with their users data in a responsible way.'},
       {name: 'Threat Modelling', description: 'With the number of high-profile security breaches in the past months, software development teams no longer need convincing that they must place an emphasis on writing secure software and dealing with their users data in a responsible way.'},
       {name: 'Decoupling deployment from release', description: 'Implementing Continuous Delivery continues to be a challenge for many organizations, and it remains important to highlight useful techniques such as decoupling deployment from release.'}],
     trial: [
@@ -64,7 +85,8 @@ var radar = {
       {name: 'A single CI instance for all teams', description: 'There might be the impression that its easier to manage a single CI (Continuous Integration) instance for all teams because it gives them a single configuration and monitoring point. But a bloated instance that is shared by every team in an organization can cause a lot of damage.'},
       {name: 'Gitflow', description: 'We firmly believe that long-lived version-control branches harm valuable engineering practices such as continuous integration, and this belief underlies our dislike for Gitflow. We love the flexibility of Git underneath but abhor tools that encourage bad engineering practices.'}]},
   tools:
-      {radian:{max:2*Math.PI, min: (3*Math.PI)/2},
+      {title: 'Tools',
+        radian:{max:2*Math.PI, min: (3*Math.PI)/2},
         adopt: [
       {name: 'Consul', description: 'We have moved Consul, the service-discovery tool supporting both DNS- and HTTP-based discovery mechanisms, into Adopt. It goes beyond other discovery tools by providing customizable health checks for registered services, ensuring that unhealthy instances are marked accordingly.'}],
     trial: [
@@ -76,7 +98,8 @@ var radar = {
     hold: [
       {name: 'Jenkins as a deployment pipeline', description: 'We know we are in perilous territory here, since we build a competing tool, but we feel we have to address a persistent problem. Continuous Integration tools like CruiseControl and Jenkins are valuable for software development, but as your build process gets more complex it requires something beyond just Continuous Integration: It requires a deployment pipeline. '}]},
   platforms:
-      {radian:{max: Math.PI, min: Math.PI/2},
+      {title: 'Platforms',
+        radian:{max: Math.PI, min: Math.PI/2},
         adopt: [
       {name: 'Docker', description: 'We remain excited about Docker as it evolves from a tool to a complex platform of technologies. Development teams love Docker, as the Docker image format makes it easier to achieve parity between development and production, making for reliable deployments.'},
       {name: 'TOTP Two-Factor Authentication', description: 'Password security is still a hotly debated topic with the UK government advocating technical controls that let users remember simpler passwords and Edward Snowden’s password advice being described as only "borderline secure". Passwords are generally one of the weakest links in the security chain, so we recommend employing two-factor authentication, which can significantly improve security. Time-based One-Time Password (TOTP) is the standard algorithm in this space, with straightforward server-side implementations and free smartphone authenticator apps from Google and Microsoft.'}],
@@ -90,7 +113,8 @@ var radar = {
       {name: 'Application Servers', description: 'The rise of containers, phoenix servers and continuous delivery has seen a move away from the usual approach to deploying web applications. Traditionally we have built an artifact and then installed that artifact into an application server. The result was long feedback loops for changes, increased build times and the not insignificant overhead of managing these application servers in production. Many of them are a pain to automate too. Most teams we work with favor bundling an embedded http server within your web application.'},
       {name: 'Superficial private cloud', description: 'We have seen the indisputable productivity gains that come from deployment of applications and services into mature cloud providers. Much of that gain comes from the ability of teams to deploy and operate their own services with a high degree of autonomy and responsibility. We are now regularly coming across Superficial Private Cloud offerings within organizations, where basic virtualization platforms are being given the “cloud” label.'}]},
   langsAndFrameworks:
-      {radian:{max:0, min: Math.PI/2},
+      {title: 'Languages and Frameworks',
+        radian:{max:0, min: Math.PI/2},
         adopt: [
       {name: 'ES6', description: 'Over many years, JavaScript has grown to become probably the most widely used programming language in the world. Nevertheless, the language itself has a few problems that many have attempted to address by using libraries or even by implementing their own languages that run on top of JavaScript (of which we’ve mentioned both CoffeeScript and ClojureScript before). ES6 (aka ECMAScript 6 or ECMAScript 2015), the new version of JavaScript, addresses many of the concerns of the older versions currently in use.'},
       {name: 'Spring Boot', description: 'A lot of work has gone into Spring Boot to reduce complexity and dependencies, which largely alleviates our previous reservations. If you live in a Spring ecosystem and are moving to microservices, Spring Boot is now the obvious choice. For those not in Springland, Dropwizard is also worthy of serious consideration.'}],
@@ -107,7 +131,7 @@ var radar = {
 var svg = d3.select("body").append("svg")
     .attr("width", margin.left + margin.right)
     .attr("height", margin.top + margin.bottom)
-  .append("g")
+    .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     svg.selectAll('circle')
@@ -117,24 +141,76 @@ var svg = d3.select("body").append("svg")
     .datum(function(d){return annuli[d];})
     .attr('r', function(d){return d.outer;})
     .attr('class', function(d){return d.text.toLowerCase() + '-cir'})
-    .on('click', function(d){alert(d.text);});
+    .on('mouseover', function(){
+      var x =  d3.mouse(this)[0], y = d3.mouse(this)[1];
+      if (x < -5 && y < -5){if ($('.techniques').children().is(':hidden')) {$('.section').children().hide(100); $('.techniques').children().show(100);}}
+      if (x > 5 && y < -5){if ($('.tools').children().is(':hidden')) {$('.section').children().hide(100); $('.tools').children().show(100);}}
+      if (x < -5 && y > 5){if ($('.platforms').children().is(':hidden')) {$('.section').children().hide(100); $('.platforms').children().show(100);}}
+      if (x > 5 && y > 5){if ($('.langsAndFrameworks').children().is(':hidden')) {$('.section').children().hide(100); $('.langsAndFrameworks').children().show(100);}}
+    });
 
+    function pingRecommendations(d){
+      var keys = Object.keys(radar[d]).splice(2);
+      //loop over each recommendation postiion (e.g. hold, assess) for this section.
+      for(i=0;i<keys.length;i++)
+      {
+        var pings = radar[d][keys[i]];
+        //calculate scales to use in this annuli based on the number of pings to place in it
+        //var heightOffset = d3.scale.linear().domain([0, pings.length-1]).range([0.25, 0.75]);
+        var heightOffset = d3.scale.linear().domain([1, pings.length+1]).range([0.25, 0.75]);
+        var widthOffset = d3.scale.linear().range([0.25, 0.75 ]);
+        //loop over each ping (item) being recommended
+        for(j=0;j<pings.length;j++)
+        {
+          var pingBehaviour = {
+            id: radar[d][keys[i]][j].name.toLowerCase().replace(/\s+/g, ''),
+            description: radar[d][keys[i]][j].description,
+            displayRecommendation: function(){
+              //alert(this.id);
+              $('p.title').children('.recommendation').hide();
+              $('p#' + this.id).children('.recommendation').show(400);
+            },
+            highlightRecommendation: function(){
+              $('p#' + this.id).toggleClass('highlight');
+              $('p#' + this.id).children('.recommendation').toggleClass('nohighlight');
+            }
+          };
+          ping(annuli[keys[i]].outer,
+            annuli[keys[i]].inner,
+            radar[d].radian.max,
+            radar[d].radian.min,
+            heightOffset(j+1.5), widthOffset(j%3),
+            pingBehaviour);
+        }
+      }
+    }
+
+    //Render all radar content to the html dom using d3 data binds
+   d3.select('body').append('div').attr('class', 'content');
    d3.select('div').selectAll('p')
     .data(Object.keys(radar))
     .enter()
     .append('p')
-    .text(function(d){return d;})
+    .text(function(d){return radar[d].title;})
+    .each(pingRecommendations)
+    .attr('class', function(d) {return 'section ' + d;})
     .selectAll('p')
-    .data(function(d){return Object.keys(radar[d]).splice(1);})
+    .data(function(d){return Object.keys(radar[d]).splice(2);})
     .enter()
     .append('p')
-    .text(function(d){return d;})
+    .text(function(d){return d.replace(/\b\w/g, function(l){ return l.toUpperCase() });})
+    .attr('class', 'position')
     .datum(function(d){return radar[this.parentNode.__data__][d];})
     .selectAll('p')
     .data(function(){return this.parentNode.__data__})
     .enter()
     .append('p')
-    .text(function(d){return d.name + ' - ' + d.description;});
+    .text(function(d){return d.name;})
+    .attr('class', 'title')
+    .attr('id', function(d){return d.name.toLowerCase().replace(/\s+/g, '');})
+    .append('p')
+    .text(function(d){return d.description;})
+    .attr('class', 'recommendation');
 
 var vert = svg.append("line")
       .attr('x1', -radius)
@@ -150,7 +226,7 @@ var horiz = svg.append("line")
 
 var annuliLabels = svg.selectAll('text')
       .data(Object.keys(annuli))
-      .enter()
+      .enter();
       annuliLabels.append('text')
       .attr('y', 5)
       .attr('x', function(d){return -getCentreAnnuli(d); })
@@ -160,18 +236,22 @@ var annuliLabels = svg.selectAll('text')
       .attr('x', function(d){return getCentreAnnuli(d);})
       .text(function(d){return annuli[d].text;});
 
+//hide some content
+$('.recommendation').hide(1000);
+$('.section').children().hide(1000);
+
 //returns the central x coordinate for a given annuli
 function getCentreAnnuli(key)
 {
   return ((annuli[key].outer-annuli[key].inner)/2)+annuli[key].inner;
 }
-for(i=0;i<10;i++)
-{
-  ping(annuli.hold.outer, annuli.hold.inner, radar.langsAndFrameworks.radian.max, radar.langsAndFrameworks.radian.min);
-}
+//for(i=0;i<10;i++)
+//{
+//  ping(annuli.hold.outer, annuli.hold.inner, radar.langsAndFrameworks.radian.max, radar.langsAndFrameworks.radian.min);
+//}
 
 //plot point on radar: annulus radius boundaries r1, r2. Pie quadrant radian boundaries maxRad, minRad
-function ping(r1, r2, maxRad, minRad)
+function ping(r1, r2, maxRad, minRad, heightOffset, widthOffset, behaviour)
 {
       r1 = r1 - 20;
       r2 = r2 + 20;
@@ -179,17 +259,23 @@ function ping(r1, r2, maxRad, minRad)
      //var t = 2 * Math.PI * Math.random();
      //restrict point to a radian boundary in an annulus
      //replacing Math.radom() with a value between 0 and 1 will affect where at the start/end of the annulus/radian boundary the ping will position.
-     var t = Math.random() * (maxRad - minRad) + minRad;
+     //var t = Math.random() * (maxRad - minRad) + minRad;
+     var t = heightOffset * (maxRad - minRad) + minRad;
 
      var A = 2/(r1*r1 - r2*r2);
      //should be random.uniform(0,1)
      //replacing Math.random() with a value between 0 and 1 will affect where in the which radian (how far out) the ping will position within the annulus.
-     var r = Math.sqrt(2 * Math.random()/A + r2*r2);
+     //var r = Math.sqrt(2 * Math.random()/A + r2*r2);
+     var r = Math.sqrt(2 * widthOffset/A + r2*r2);
      var xy = [r*Math.cos(t), r*Math.sin(t)];
 
      svg.append("path")
       .attr("transform", function(d) { return "translate(" + xy[0] + "," + xy[1] + ")"; })
-      .attr("d", d3.svg.symbol().type('triangle-up').size(50));
+      .attr("d", d3.svg.symbol().type('triangle-up').size(100))
+      .attr('id', function(){return behaviour.id;})
+      .on('click', function(){behaviour.displayRecommendation();})
+      .on('mouseover', function(){behaviour.highlightRecommendation(); $('path').fadeTo(0, 0.4); $('path#' + this.id).fadeTo(0, 1);})
+      .on('mouseout', function(){behaviour.highlightRecommendation(); $('path').fadeTo(0, 1);});
 }
 </script>
 </body>

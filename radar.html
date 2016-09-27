@@ -20,11 +20,9 @@ circle,
 path {
   cursor: pointer;
 }
-
 circle {
   pointer-events: all;
 }
-
 .adopt-cir{fill:rgb(191, 192, 191);}
 .trial-cir{fill:rgb(203,204,203);}
 .assess-cir{fill:rgb(215,216,214);}
@@ -40,11 +38,26 @@ body{
   float:left; width:400px;
   border: 0px solid blue;
 }
-.section{font-weight: bold;}
-.position{font-weight: bold;}
-.title{font-weight: normal;}
-.highlight{font-weight: bold;}
-.nohighlight{font-weight: normal;}
+.section{
+  font-weight: bold;
+  font-size: 1.2Em;
+}
+.position{
+  font-weight: bold;
+  font-size: 0.85Em;
+}
+.title{
+  font-weight: normal;
+  font-size: 0.9Em;
+}
+.highlight{
+  font-weight: bold;
+  color: rgb(240,171,0);
+}
+.nohighlight{
+  font-weight: normal;
+  color:black;
+}
 svg
 {
     float:left;
@@ -129,6 +142,15 @@ var radar = {
       {name: 'JSPatch', description: 'Many iOS developers are using JSPatch to dynamically patch their apps. When a JSPatch-enabled app runs, it loads a chunk of JavaScript (potentially via an insecure HTTP connection) and then bridges to the main Objective-C application code to change behavior, fix bugs, and so on. While convenient, we think monkey-patching live apps is a bad idea and should be avoided.'}]}
 };
 
+function displayRadarQuadrantRecommendations(sect)
+{
+  if ($(sect).children().is(':hidden')) {
+    $('.section').hide();
+    $(sect).show(100);
+    $(sect).children().show(100);
+  }
+}
+
 var svg = d3.select("body").append("svg")
     .attr("width", margin.left + margin.right)
     .attr("height", margin.top + margin.bottom)
@@ -144,10 +166,10 @@ var svg = d3.select("body").append("svg")
     .attr('class', function(d){return d.text.toLowerCase() + '-cir'})
     .on('mouseover', function(){
       var x =  d3.mouse(this)[0], y = d3.mouse(this)[1];
-      if (x < -5 && y < -5){if ($('.techniques').children().is(':hidden')) {$('.section').children().hide(100); $('.techniques').children().show(100);}}
-      if (x > 5 && y < -5){if ($('.tools').children().is(':hidden')) {$('.section').children().hide(100); $('.tools').children().show(100);}}
-      if (x < -5 && y > 5){if ($('.platforms').children().is(':hidden')) {$('.section').children().hide(100); $('.platforms').children().show(100);}}
-      if (x > 5 && y > 5){if ($('.langsAndFrameworks').children().is(':hidden')) {$('.section').children().hide(100); $('.langsAndFrameworks').children().show(100);}}
+      if (x < -5 && y < -5){displayRadarQuadrantRecommendations('.techniques');}
+      if (x > 5 && y < -5){displayRadarQuadrantRecommendations('.tools');}
+      if (x < -5 && y > 5){displayRadarQuadrantRecommendations('.platforms');}
+      if (x > 5 && y > 5){displayRadarQuadrantRecommendations('.langsAndFrameworks');}
     });
 
     function pingRecommendations(d){
@@ -246,10 +268,6 @@ function getCentreAnnuli(key)
 {
   return ((annuli[key].outer-annuli[key].inner)/2)+annuli[key].inner;
 }
-//for(i=0;i<10;i++)
-//{
-//  ping(annuli.hold.outer, annuli.hold.inner, radar.langsAndFrameworks.radian.max, radar.langsAndFrameworks.radian.min);
-//}
 
 //plot point on radar: annulus radius boundaries r1, r2. Pie quadrant radian boundaries maxRad, minRad
 function ping(r1, r2, maxRad, minRad, heightOffset, widthOffset, behaviour)

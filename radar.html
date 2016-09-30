@@ -4,7 +4,8 @@
 <style>
 text
 {
-font: bold 12px Verdana, Helvetica, Arial, sans-serif;
+font: bold 12px;
+font-family: "Open Sans","Microsoft YaHei","Hiragino Sans GB","Hiragino Sans GB W3","Helvetica Neue",Arial,sans-serif;
 text-anchor:middle;
 }
 line{
@@ -33,6 +34,9 @@ body{
     margin-right: auto;
     margin-top: none;
     margin-bottom: none;
+}
+.annuliLabels{
+  font: bold 12px Verdana, Helvetica, Arial, sans-serif;
 }
 .content{
   float:left; width:400px;
@@ -232,7 +236,7 @@ var svg = d3.select("body").append("svg")
     .attr('class', 'title')
     .attr('id', function(d){return d.name.toLowerCase().replace(/\s+/g, '');})
     .append('p')
-    .text(function(d){return d.description;})
+    .html(function(d){return d.description;})
     .attr('class', 'recommendation');
 
 var vert = svg.append("line")
@@ -253,10 +257,12 @@ var annuliLabels = svg.selectAll('text')
       annuliLabels.append('text')
       .attr('y', 5)
       .attr('x', function(d){return -getCentreAnnuli(d); })
+      .attr('class', 'annuliLabels')
       .text(function(d){return annuli[d].text;});
       annuliLabels.append('text')
       .attr('y', 5)
       .attr('x', function(d){return getCentreAnnuli(d);})
+      .attr('class', 'annuliLabels')
       .text(function(d){return annuli[d].text;});
 
 //hide some content

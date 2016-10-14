@@ -175,7 +175,26 @@ var svg = d3.select("body").append("svg")
       if (x < -5 && y > 5){displayRadarQuadrantRecommendations('.platforms');}
       if (x > 5 && y > 5){displayRadarQuadrantRecommendations('.langsAndFrameworks');}
     });
-
+    function dispRec(id)
+    {
+      $('p.title').children('.recommendation').hide();
+      $('p#' + id).children('.recommendation').show(400);
+    }
+    function highRec(id)
+    {
+      $('p#' + id).toggleClass('highlight');
+      $('p#' + id).children('.recommendation').toggleClass('nohighlight');
+      $('p#' + id).css("cursor", "pointer");
+      if($('p#' + id).hasClass('highlight'))
+      {
+        $('path').fadeTo(0, 0.4);
+        $('path#' + id).fadeTo(0, 1);
+      }
+      else
+      {
+        $('path').fadeTo(0, 1);
+      }
+    }
     function pingRecommendations(d){
       var keys = Object.keys(radar[d]).splice(2);
       //loop over each recommendation postiion (e.g. hold, assess) for this section.
@@ -193,13 +212,10 @@ var svg = d3.select("body").append("svg")
             id: radar[d][keys[i]][j].name.toLowerCase().replace(/\s+/g, ''),
             description: radar[d][keys[i]][j].description,
             displayRecommendation: function(){
-              //alert(this.id);
-              $('p.title').children('.recommendation').hide();
-              $('p#' + this.id).children('.recommendation').show(400);
+              dispRec(this.id);
             },
             highlightRecommendation: function(){
-              $('p#' + this.id).toggleClass('highlight');
-              $('p#' + this.id).children('.recommendation').toggleClass('nohighlight');
+              highRec(this.id);
             }
           };
           ping(annuli[keys[i]].outer,
@@ -235,6 +251,9 @@ var svg = d3.select("body").append("svg")
     .text(function(d){return d.name;})
     .attr('class', 'title')
     .attr('id', function(d){return d.name.toLowerCase().replace(/\s+/g, '');})
+    .on('click', function(){dispRec(this.id);})
+    .on('mouseover', function(){highRec(this.id); })
+    .on('mouseout', function(){highRec(this.id);})
     .append('p')
     .html(function(d){return d.description;})
     .attr('class', 'recommendation');
@@ -299,8 +318,8 @@ function ping(r1, r2, maxRad, minRad, heightOffset, widthOffset, behaviour)
       .attr("d", d3.svg.symbol().type('triangle-up').size(100))
       .attr('id', function(){return behaviour.id;})
       .on('click', function(){behaviour.displayRecommendation();})
-      .on('mouseover', function(){behaviour.highlightRecommendation(); $('path').fadeTo(0, 0.4); $('path#' + this.id).fadeTo(0, 1);})
-      .on('mouseout', function(){behaviour.highlightRecommendation(); $('path').fadeTo(0, 1);});
+      .on('mouseover', function(){behaviour.highlightRecommendation();})
+      .on('mouseout', function(){behaviour.highlightRecommendation();});
 }
 </script>
 </body>

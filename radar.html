@@ -87,7 +87,7 @@ var radar = {
     {title: 'Techniques',
       radian:{max:(3*Math.PI)/2, min: Math.PI},
       adopt: [
-      {name: 'Agile Threat Modelling', description: 'Same and Threat Modelling but Agile. With the number of high-profile security breaches in the past months, software development teams no longer need convincing that they must place an emphasis on writing secure software and dealing with their users data in a responsible way.'},
+      {name: 'Agile Threat Modelling', description: 'Same and Threat Modelling but <a href="http://www.google.com">Agile</a>. With the number of high-profile security breaches in the past months, software development teams no longer need convincing that they must place an emphasis on writing secure software and dealing with their users data in a responsible way.'},
       {name: 'Agile Threat Modelling v4', description: 'Same and Agile Threat Modelling v3 but newer. With the number of high-profile security breaches in the past months, software development teams no longer need convincing that they must place an emphasis on writing secure software and dealing with their users data in a responsible way.'},
       {name: 'Agile Threat Modelling v3', description: 'Same and Agile Threat Modelling v2 but newer. With the number of high-profile security breaches in the past months, software development teams no longer need convincing that they must place an emphasis on writing secure software and dealing with their users data in a responsible way.'},
       {name: 'Agile Threat Modelling v2', description: 'Same and Agile Threat Modelling but newer. With the number of high-profile security breaches in the past months, software development teams no longer need convincing that they must place an emphasis on writing secure software and dealing with their users data in a responsible way.'},
@@ -185,6 +185,9 @@ var svg = d3.select("body").append("svg")
       $('p#' + id).toggleClass('highlight');
       $('p#' + id).children('.recommendation').toggleClass('nohighlight');
       $('p#' + id).css("cursor", "pointer");
+      //reset this elements highlight setting before going to another page. If we come back on the history button, we dont want the DOM with incorrect attributes/settings.
+      $('p#' + id).children().find('a[href]').click(function(){highRec(id);});
+
       if($('p#' + id).hasClass('highlight'))
       {
         $('path').fadeTo(0, 0.4);
@@ -211,12 +214,8 @@ var svg = d3.select("body").append("svg")
           var pingBehaviour = {
             id: radar[d][keys[i]][j].name.toLowerCase().replace(/\s+/g, ''),
             description: radar[d][keys[i]][j].description,
-            displayRecommendation: function(){
-              dispRec(this.id);
-            },
-            highlightRecommendation: function(){
-              highRec(this.id);
-            }
+            displayRecommendation: function(){dispRec(this.id);},
+            highlightRecommendation: function(){highRec(this.id);}
           };
           ping(annuli[keys[i]].outer,
             annuli[keys[i]].inner,

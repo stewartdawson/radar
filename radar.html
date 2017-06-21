@@ -62,6 +62,10 @@ body{
   font-weight: normal;
   color:black;
 }
+.entryLink{
+  font-weight: normal;
+  font-size: 0.9Em;
+}
 svg
 {
     float:left;
@@ -108,7 +112,7 @@ var radar = {
         adopt: [
       {name: 'Consul', description: 'We have moved Consul, the service-discovery tool supporting both DNS- and HTTP-based discovery mechanisms, into Adopt. It goes beyond other discovery tools by providing customizable health checks for registered services, ensuring that unhealthy instances are marked accordingly.'}],
     trial: [
-      {name: 'Lets Encrypt', description: 'Lets Encrypt first appeared on the Radar last edition, and since December 2015 this project has moved its beta status from private to public, meaning users will no longer be required to have an invitation in order to try it. Lets Encrypt grants access to a simpler mechanism to obtain and manage certificates for a larger set of users who are seeking a way to secure their websites.'},
+      {name: 'Lets Encrypt', href: 'http://www.google.com', description: 'Lets Encrypt first appeared on the Radar last edition, and since December 2015 this project has moved its beta status from private to public, meaning users will no longer be required to have an invitation in order to try it. Lets Encrypt grants access to a simpler mechanism to obtain and manage certificates for a larger set of users who are seeking a way to secure their websites.'},
       {name: 'OWASP Dependency-Check', description: 'In a world full of libraries and tools that simplify the life of many software developers, deficiencies in their security have become visible and have increased the vulnerability surface in the applications that use them. OWASP Dependency-Check automatically identifies potential security problems in the code, checking if there are any known publicly disclosed vulnerabilities, then using methods to constantly update the database of public vulnerabilities. '}],
     assess: [
       {name: 'Gitrob', description: 'Attackers continue to use automated software to crawl public GitHub repositories to find AWS credentials and spin up EC2 instances to mine Bitcoins or for other nefarious purposes. Although adoption of tools like git-crypt and Blackbox to safely store secrets such as passwords and access tokens in code repositories is increasing, it is still all too common that secrets are stored unprotected.'},
@@ -254,7 +258,7 @@ var svg = d3.select("body").append("svg")
     .on('mouseover', function(){highRec(this.id); })
     .on('mouseout', function(){highRec(this.id);})
     .append('p')
-    .html(function(d){return d.description;})
+    .html(function(d){var ret = ''; if(d.href){ret = '<a class="entryLink" href="' + d.href + '">link<a/><br/>';} ret = ret + d.description; return ret;})
     .attr('class', 'recommendation');
 
 var vert = svg.append("line")
